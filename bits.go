@@ -104,7 +104,7 @@ func (b *Bits) Update(i uint64) bool {
 	}
 
 	// Allow for the 0 packet to come in within the first window
-	if i == 0 && b.firstSeen == false && b.current < b.length {
+	if i == 0 && !b.firstSeen && b.current < b.length {
 		b.firstSeen = true
 		b.bits[i%b.length] = true
 		return true
@@ -122,7 +122,7 @@ func (b *Bits) Update(i uint64) bool {
 			return false
 		}
 
-		if b.bits[i%b.length] == true {
+		if b.bits[i%b.length] {
 			if l.Level >= logrus.DebugLevel {
 				l.WithField("receiveWindow", m{"accepted": false, "currentCounter": b.current, "incomingCounter": i, "reason": "old duplicate"}).
 					Debug("Receive window")
